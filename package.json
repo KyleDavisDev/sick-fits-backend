@@ -29,5 +29,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KyleDavisDev/sick-fits-backend.git"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
   }
 }
