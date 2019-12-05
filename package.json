@@ -1,0 +1,19 @@
+{
+  "name": "sick-fits-backend",
+  "version": "1.0.0",
+  "description": "Advanced ReactJS by Wes Bos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KyleDavisDev/sick-fits-backend.git"
+  },
+  "author": "Kyle Davis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KyleDavisDev/sick-fits-backend/issues"
+  },
+  "homepage": "https://github.com/KyleDavisDev/sick-fits-backend#readme"
+}
