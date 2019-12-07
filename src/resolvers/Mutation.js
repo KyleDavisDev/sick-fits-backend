@@ -1,3 +1,3 @@
-const Mutations = { hi: String };
+const Mutation = {};
 
-module.exports = Mutations;
+module.exports = Mutation;

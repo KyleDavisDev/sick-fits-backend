@@ -1,3 +1,3 @@
-const Query = { hi: String };
+const Query = {};
 
 module.exports = Query;
