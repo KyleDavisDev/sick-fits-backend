@@ -3,6 +3,13 @@ const Query = {
     const items = await ctx.db.query.items();
 
     return items;
+  },
+
+  item: async function(parent, args, ctx, info) {
+    console.log(args, ctx);
+    const item = await ctx.db.query.item({ where: { id: args.id } }, info);
+
+    return item;
   }
 };
 
