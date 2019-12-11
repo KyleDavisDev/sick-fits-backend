@@ -33,6 +33,7 @@ export interface Prisma {
    * Queries
    */
 
+  item: (where: ItemWhereUniqueInput) => Item;
   items: (args?: {
     where?: ItemWhereInput;
     orderBy?: ItemOrderByInput;
@@ -51,6 +52,7 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => ItemConnection;
+  user: (where: UserWhereUniqueInput) => User;
   users: (args?: {
     where?: UserWhereInput;
     orderBy?: UserOrderByInput;
@@ -76,16 +78,36 @@ export interface Prisma {
    */
 
   createItem: (data: ItemCreateInput) => Item;
+  updateItem: (args: {
+    data: ItemUpdateInput;
+    where: ItemWhereUniqueInput;
+  }) => Item;
   updateManyItems: (args: {
     data: ItemUpdateInput;
     where?: ItemWhereInput;
   }) => BatchPayload;
+  upsertItem: (args: {
+    where: ItemWhereUniqueInput;
+    create: ItemCreateInput;
+    update: ItemUpdateInput;
+  }) => Item;
+  deleteItem: (where: ItemWhereUniqueInput) => Item;
   deleteManyItems: (where?: ItemWhereInput) => BatchPayload;
   createUser: (data: UserCreateInput) => User;
+  updateUser: (args: {
+    data: UserUpdateInput;
+    where: UserWhereUniqueInput;
+  }) => User;
   updateManyUsers: (args: {
     data: UserUpdateInput;
     where?: UserWhereInput;
   }) => BatchPayload;
+  upsertUser: (args: {
+    where: UserWhereUniqueInput;
+    create: UserCreateInput;
+    update: UserUpdateInput;
+  }) => User;
+  deleteUser: (where: UserWhereUniqueInput) => User;
   deleteManyUsers: (where?: UserWhereInput) => BatchPayload;
 
   /**
@@ -143,6 +165,10 @@ export type UserOrderByInput =
   | "updatedAt_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
+
+export type ItemWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
 
 export interface ItemWhereInput {
   id?: ID_Input;
@@ -243,6 +269,10 @@ export interface ItemWhereInput {
   OR?: ItemWhereInput[] | ItemWhereInput;
   NOT?: ItemWhereInput[] | ItemWhereInput;
 }
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
 
 export interface UserWhereInput {
   id?: ID_Input;
