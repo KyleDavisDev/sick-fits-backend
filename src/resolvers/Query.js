@@ -6,8 +6,10 @@ const Query = {
   },
 
   item: async function(parent, args, ctx, info) {
-    console.log(args, ctx);
-    const item = await ctx.db.query.item({ where: { id: args.id } }, info);
+    const item = await ctx.db.query.item(
+      { where: { id: args.where.id } },
+      info
+    );
 
     return item;
   }
