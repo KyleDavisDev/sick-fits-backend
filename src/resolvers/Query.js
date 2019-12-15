@@ -5,6 +5,12 @@ const Query = {
     return items;
   },
 
+  itemsConnection: async function(parent, args, ctx, info) {
+    const itemsConnection = await ctx.db.query.itemsConnection();
+
+    return itemsConnection;
+  },
+
   item: async function(parent, args, ctx, info) {
     const item = await ctx.db.query.item(
       { where: { id: args.where.id } },
