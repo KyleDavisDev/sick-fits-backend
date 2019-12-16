@@ -6,7 +6,10 @@ const Query = {
   },
 
   itemsConnection: async function(parent, args, ctx, info) {
-    const itemsConnection = await ctx.db.query.itemsConnection();
+    const itemsConnection = await ctx.db.query.itemsConnection(
+      { where: {} },
+      info
+    );
 
     return itemsConnection;
   },
