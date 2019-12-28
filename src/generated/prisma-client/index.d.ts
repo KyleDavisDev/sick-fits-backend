@@ -152,6 +152,14 @@ export type ItemOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
+export type Permission =
+  | "ADMIN"
+  | "USER"
+  | "ITEMCREATE"
+  | "ITEMUPDATE"
+  | "ITEMDELETE"
+  | "PERMISSIONUPDATE";
+
 export type UserOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -159,6 +167,12 @@ export type UserOrderByInput =
   | "name_DESC"
   | "email_ASC"
   | "email_DESC"
+  | "password_ASC"
+  | "password_DESC"
+  | "resetToken_ASC"
+  | "resetToken_DESC"
+  | "resetTokenExpire_ASC"
+  | "resetTokenExpire_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -272,6 +286,7 @@ export interface ItemWhereInput {
 
 export type UserWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
+  email?: String;
 }>;
 
 export interface UserWhereInput {
@@ -317,6 +332,42 @@ export interface UserWhereInput {
   email_not_starts_with?: String;
   email_ends_with?: String;
   email_not_ends_with?: String;
+  password?: String;
+  password_not?: String;
+  password_in?: String[] | String;
+  password_not_in?: String[] | String;
+  password_lt?: String;
+  password_lte?: String;
+  password_gt?: String;
+  password_gte?: String;
+  password_contains?: String;
+  password_not_contains?: String;
+  password_starts_with?: String;
+  password_not_starts_with?: String;
+  password_ends_with?: String;
+  password_not_ends_with?: String;
+  resetToken?: String;
+  resetToken_not?: String;
+  resetToken_in?: String[] | String;
+  resetToken_not_in?: String[] | String;
+  resetToken_lt?: String;
+  resetToken_lte?: String;
+  resetToken_gt?: String;
+  resetToken_gte?: String;
+  resetToken_contains?: String;
+  resetToken_not_contains?: String;
+  resetToken_starts_with?: String;
+  resetToken_not_starts_with?: String;
+  resetToken_ends_with?: String;
+  resetToken_not_ends_with?: String;
+  resetTokenExpire?: Float;
+  resetTokenExpire_not?: Float;
+  resetTokenExpire_in?: Float[] | Float;
+  resetTokenExpire_not_in?: Float[] | Float;
+  resetTokenExpire_lt?: Float;
+  resetTokenExpire_lte?: Float;
+  resetTokenExpire_gt?: Float;
+  resetTokenExpire_gte?: Float;
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
@@ -341,11 +392,27 @@ export interface ItemUpdateInput {
 export interface UserCreateInput {
   name: String;
   email: String;
+  password: String;
+  resetToken?: String;
+  resetTokenExpire?: Float;
+  permissions?: UserCreatepermissionsInput;
+}
+
+export interface UserCreatepermissionsInput {
+  set?: Permission[] | Permission;
 }
 
 export interface UserUpdateInput {
   name?: String;
   email?: String;
+  password?: String;
+  resetToken?: String;
+  resetTokenExpire?: Float;
+  permissions?: UserUpdatepermissionsInput;
+}
+
+export interface UserUpdatepermissionsInput {
+  set?: Permission[] | Permission;
 }
 
 export interface ItemSubscriptionWhereInput {
@@ -486,12 +553,20 @@ export interface UserNode {
   id: ID_Output;
   name: String;
   email: String;
+  password: String;
+  resetToken?: String;
+  resetTokenExpire?: Float;
+  permissions: Permission[];
 }
 
 export interface User extends Promise<UserNode>, Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
   email: () => Promise<String>;
+  password: () => Promise<String>;
+  resetToken: () => Promise<String>;
+  resetTokenExpire: () => Promise<Float>;
+  permissions: () => Promise<Permission[]>;
 }
 
 export interface UserSubscription
@@ -500,6 +575,10 @@ export interface UserSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  resetToken: () => Promise<AsyncIterator<String>>;
+  resetTokenExpire: () => Promise<AsyncIterator<Float>>;
+  permissions: () => Promise<AsyncIterator<Permission[]>>;
 }
 
 export interface UserConnectionNode {}
@@ -653,6 +732,10 @@ export interface UserPreviousValuesNode {
   id: ID_Output;
   name: String;
   email: String;
+  password: String;
+  resetToken?: String;
+  resetTokenExpire?: Float;
+  permissions: Permission[];
 }
 
 export interface UserPreviousValues
@@ -661,6 +744,10 @@ export interface UserPreviousValues
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
   email: () => Promise<String>;
+  password: () => Promise<String>;
+  resetToken: () => Promise<String>;
+  resetTokenExpire: () => Promise<Float>;
+  permissions: () => Promise<Permission[]>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -669,6 +756,10 @@ export interface UserPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  resetToken: () => Promise<AsyncIterator<String>>;
+  resetTokenExpire: () => Promise<AsyncIterator<Float>>;
+  permissions: () => Promise<AsyncIterator<Permission[]>>;
 }
 
 /*
@@ -701,6 +792,11 @@ export type DateTimeOutput = string;
 The `Boolean` scalar type represents `true` or `false`.
 */
 export type Boolean = boolean;
+
+/*
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). 
+*/
+export type Float = number;
 
 export type Long = string;
 
