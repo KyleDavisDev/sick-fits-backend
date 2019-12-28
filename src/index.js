@@ -1,4 +1,4 @@
-const cookieParser = requier("cookie-parser");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 console.log(process.env.PRISMA_ENDPOINT);
 const createServer = require("./createServer");
