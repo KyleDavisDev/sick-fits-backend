@@ -36,7 +36,7 @@ const Mutation = {
     // 3. Delete it
     return await ctx.db.mutation.deleteItem({ where }, info);
   },
-  signUp: async function(parent, args, ctx, info) {
+  createNewUser: async function(parent, args, ctx, info) {
     // First.Last@email.com ==> first.last@email.com
     args.email = args.email.toLowerCase();
 
