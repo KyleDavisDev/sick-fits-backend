@@ -21,6 +21,16 @@ const Query = {
     );
 
     return item;
+  },
+
+  me: async function(parent, args, ctx, info) {
+    // Check if there is a current userID
+    if (!ctx.request.userId) {
+      return null;
+    }
+
+    // find user
+    return ctx.db.query.user({ where: { id: ctx.request.userId } }, info);
   }
 };
 
