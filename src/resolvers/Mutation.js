@@ -60,6 +60,14 @@ const Mutation = {
 
     // Finally return
     return user;
+  },
+
+  signIn: async function(parent, args, ctx, info) {
+    // 1. Check if user with that email exists
+    // 2. Check if password is correct
+    // 3. Generate JWT token
+    // 4. Set cookie with token
+    // 5. Return the user
   }
 };
 
