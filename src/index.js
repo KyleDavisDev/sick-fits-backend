@@ -18,7 +18,8 @@ server.express.use((req, res, next) => {
     // put the userId onto the req for future requests to access
     req.userId = userId;
   }
-  console.log(token);
+
+  // Keep chuggin'!
   next();
 });
 
