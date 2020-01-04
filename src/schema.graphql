@@ -11,7 +11,6 @@ type Mutation {
   updateItem(id: ID!, title: String, description: String, price: Int): Item!
   deleteItem(id: ID!): Item!
   createNewUser(email: String!, password: String!, name: String!): User!
-  signIn(email: String!, password: String!): User
 }
 
 type Query {
@@ -24,4 +23,5 @@ type Query {
   item(where: ItemWhereInput!): Item
   itemsConnection(where: ItemWhereInput): ItemConnection!
   me: User
+  signIn(email: String!, password: String!): User
 }
