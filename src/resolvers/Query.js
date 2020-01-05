@@ -62,6 +62,28 @@ const Query = {
 
     // 5. Return the user
     return user;
+  },
+
+  requestReset: async function(parent, args, ctx, info) {
+    // 1. Check if real user
+    const user = await ctx.db.query.user({ where: { email: args.email } });
+    if (!user) {
+      throw new Error("Cannot find user");
+    }
+
+    // 2. Set expiry on user
+    const resetToken = (await promisify(randomBytes)(20)).toString("hex");
+    const resetTokenExpire = Date.now() + 1000 * 60 * 60; // 1 hr
+    const res = await ctx.db.mutation.updateUser({
+      where: { email: args.email },
+      data: { resetToken, resetTokenExpire }
+    });
+
+    console.log(res);
+
+    return { message: "Thanks" };
+
+    // 3. Send email
   }
 };
 

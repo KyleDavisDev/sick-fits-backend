@@ -12,7 +12,6 @@ type Mutation {
   deleteItem(id: ID!): Item!
   createNewUser(email: String!, password: String!, name: String!): User!
   signOut: SuccessMessage
-  requestReset(email: String!): SuccessMessage
   resetPassword(
     resetToken: String!
     password: String!
@@ -31,6 +30,7 @@ type Query {
   itemsConnection(where: ItemWhereInput): ItemConnection!
   me: User
   signIn(email: String!, password: String!): User
+  requestReset(email: String!): SuccessMessage
 }
 
 type SuccessMessage {
