@@ -13,6 +13,11 @@ type Mutation {
   createNewUser(email: String!, password: String!, name: String!): User!
   signOut: SuccessMessage
   requestReset(email: String!): SuccessMessage
+  resetPassword(
+    resetToken: String!
+    password: String!
+    confirmPassword: String!
+  ): User!
 }
 
 type Query {
