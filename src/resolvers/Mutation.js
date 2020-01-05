@@ -91,6 +91,46 @@ const Mutation = {
     return { message: "Thanks" };
 
     // 3. Send email
+  },
+
+  resetPassword: async function(parent, args, ctx, info) {
+    // 1. Check if passwords match
+    if (args.password !== args.confirmPassword) {
+      throw new Error("Passwords do not match");
+    }
+
+    // 2. Check if it is a legit reset token
+    // 3. Check for expiration
+    const [user] = await ctx.db.query.users({
+      where: {
+        resetToken: args.resetToken,
+        resetTokenExpire_gte: Date.now() - 1000 * 60 * 60
+      }
+    });
+    if (!user) {
+      throw new Error("This token is either invalid or expired!");
+    }
+
+    // 4. Hash new password
+    const hashPassword = await bcrypt.hash(args.password, 10);
+
+    // 5. Update user password and cleanup
+    const updatedUser = await ctx.db.mutation.updateUser({
+      where: { id: user.id },
+      data: { password: hashPassword, resetToken: null, resetTokenExpire: null }
+    });
+
+    // 6. Generate new JWT
+    const token = jwt.sign({ userId: updatedUser.id }, process.env.APP_SECRET);
+
+    // 7. set JWT as cookie
+    ctx.response.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 30 // 30 day token
+    });
+
+    // 8. Return new user
+    return updatedUser;
   }
 };
 
