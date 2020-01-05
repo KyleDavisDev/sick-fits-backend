@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { randomBytes } = require("crypto");
+const { promisify } = require("util");
 
 const Query = {
   items: async function(parent, args, ctx, info) {
@@ -78,8 +80,6 @@ const Query = {
       where: { email: args.email },
       data: { resetToken, resetTokenExpire }
     });
-
-    console.log(res);
 
     return { message: "Thanks" };
 
