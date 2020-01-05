@@ -134,6 +134,14 @@ export interface ClientConstructor<T> {
  * Types
  */
 
+export type Permission =
+  | "ADMIN"
+  | "USER"
+  | "ITEMCREATE"
+  | "ITEMUPDATE"
+  | "ITEMDELETE"
+  | "PERMISSIONUPDATE";
+
 export type ItemOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -151,14 +159,6 @@ export type ItemOrderByInput =
   | "createdAt_DESC"
   | "updatedAt_ASC"
   | "updatedAt_DESC";
-
-export type Permission =
-  | "ADMIN"
-  | "USER"
-  | "ITEMCREATE"
-  | "ITEMUPDATE"
-  | "ITEMDELETE"
-  | "PERMISSIONUPDATE";
 
 export type UserOrderByInput =
   | "id_ASC"
@@ -279,15 +279,11 @@ export interface ItemWhereInput {
   updatedAt_lte?: DateTimeInput;
   updatedAt_gt?: DateTimeInput;
   updatedAt_gte?: DateTimeInput;
+  user?: UserWhereInput;
   AND?: ItemWhereInput[] | ItemWhereInput;
   OR?: ItemWhereInput[] | ItemWhereInput;
   NOT?: ItemWhereInput[] | ItemWhereInput;
 }
-
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-  email?: String;
-}>;
 
 export interface UserWhereInput {
   id?: ID_Input;
@@ -373,20 +369,23 @@ export interface UserWhereInput {
   NOT?: UserWhereInput[] | UserWhereInput;
 }
 
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+  email?: String;
+}>;
+
 export interface ItemCreateInput {
   title: String;
   description: String;
   image?: String;
   largeImage?: String;
   price: Int;
+  user: UserCreateOneInput;
 }
 
-export interface ItemUpdateInput {
-  title?: String;
-  description?: String;
-  image?: String;
-  largeImage?: String;
-  price?: Int;
+export interface UserCreateOneInput {
+  create?: UserCreateInput;
+  connect?: UserWhereUniqueInput;
 }
 
 export interface UserCreateInput {
@@ -402,7 +401,23 @@ export interface UserCreatepermissionsInput {
   set?: Permission[] | Permission;
 }
 
-export interface UserUpdateInput {
+export interface ItemUpdateInput {
+  title?: String;
+  description?: String;
+  image?: String;
+  largeImage?: String;
+  price?: Int;
+  user?: UserUpdateOneRequiredInput;
+}
+
+export interface UserUpdateOneRequiredInput {
+  create?: UserCreateInput;
+  update?: UserUpdateDataInput;
+  upsert?: UserUpsertNestedInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserUpdateDataInput {
   name?: String;
   email?: String;
   password?: String;
@@ -413,6 +428,20 @@ export interface UserUpdateInput {
 
 export interface UserUpdatepermissionsInput {
   set?: Permission[] | Permission;
+}
+
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput;
+  create: UserCreateInput;
+}
+
+export interface UserUpdateInput {
+  name?: String;
+  email?: String;
+  password?: String;
+  resetToken?: String;
+  resetTokenExpire?: Float;
+  permissions?: UserUpdatepermissionsInput;
 }
 
 export interface ItemSubscriptionWhereInput {
@@ -461,6 +490,7 @@ export interface Item extends Promise<ItemNode>, Fragmentable {
   price: () => Promise<Int>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
+  user: <T = User>() => T;
 }
 
 export interface ItemSubscription
@@ -474,6 +504,39 @@ export interface ItemSubscription
   price: () => Promise<AsyncIterator<Int>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  user: <T = UserSubscription>() => T;
+}
+
+export interface UserNode {
+  id: ID_Output;
+  name: String;
+  email: String;
+  password: String;
+  resetToken?: String;
+  resetTokenExpire?: Float;
+  permissions: Permission[];
+}
+
+export interface User extends Promise<UserNode>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
+  resetToken: () => Promise<String>;
+  resetTokenExpire: () => Promise<Float>;
+  permissions: () => Promise<Permission[]>;
+}
+
+export interface UserSubscription
+  extends Promise<AsyncIterator<UserNode>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  resetToken: () => Promise<AsyncIterator<String>>;
+  resetTokenExpire: () => Promise<AsyncIterator<Float>>;
+  permissions: () => Promise<AsyncIterator<Permission[]>>;
 }
 
 export interface ItemConnectionNode {}
@@ -547,38 +610,6 @@ export interface AggregateItemSubscription
   extends Promise<AsyncIterator<AggregateItemNode>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface UserNode {
-  id: ID_Output;
-  name: String;
-  email: String;
-  password: String;
-  resetToken?: String;
-  resetTokenExpire?: Float;
-  permissions: Permission[];
-}
-
-export interface User extends Promise<UserNode>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  email: () => Promise<String>;
-  password: () => Promise<String>;
-  resetToken: () => Promise<String>;
-  resetTokenExpire: () => Promise<Float>;
-  permissions: () => Promise<Permission[]>;
-}
-
-export interface UserSubscription
-  extends Promise<AsyncIterator<UserNode>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  email: () => Promise<AsyncIterator<String>>;
-  password: () => Promise<AsyncIterator<String>>;
-  resetToken: () => Promise<AsyncIterator<String>>;
-  resetTokenExpire: () => Promise<AsyncIterator<Float>>;
-  permissions: () => Promise<AsyncIterator<Permission[]>>;
 }
 
 export interface UserConnectionNode {}
@@ -789,14 +820,14 @@ DateTime scalar output type, which is always a string
 export type DateTimeOutput = string;
 
 /*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
-
-/*
 The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). 
 */
 export type Float = number;
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 export type Long = string;
 
