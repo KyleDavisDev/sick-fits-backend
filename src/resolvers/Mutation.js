@@ -17,7 +17,7 @@ const Mutation = {
   updateItem: async function(parent, args, ctx, info) {
     // 1. Check if they are logged in
     if (!ctx.request.userId) {
-      throw new Error("You must be logged into to create an item!");
+      throw new Error("You must be logged into to update an item!");
     }
 
     const updates = { ...args };
@@ -36,7 +36,7 @@ const Mutation = {
   deleteItem: async function(parent, args, ctx, info) {
     // 1. Check if they are logged in
     if (!ctx.request.userId) {
-      throw new Error("You must be logged into to create an item!");
+      throw new Error("You must be logged into to delete an item!");
     }
 
     const where = { id: args.id };
