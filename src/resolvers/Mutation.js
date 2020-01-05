@@ -5,14 +5,20 @@ const { promisify } = require("util");
 
 const Mutation = {
   createItem: async function(parent, args, ctx, info) {
-    // TODO: Check if they are logged in
+    // 1. Check if they are logged in
+    if (!ctx.request.userId) {
+      throw new Error("You must be logged into to create an item!");
+    }
 
     const item = await ctx.db.mutation.createItem({ data: { ...args } }, info);
 
     return item;
   },
   updateItem: async function(parent, args, ctx, info) {
-    // TODO: Check if they are logged in
+    // 1. Check if they are logged in
+    if (!ctx.request.userId) {
+      throw new Error("You must be logged into to create an item!");
+    }
 
     const updates = { ...args };
 
@@ -28,7 +34,10 @@ const Mutation = {
     );
   },
   deleteItem: async function(parent, args, ctx, info) {
-    // TODO: Check if they are logged in
+    // 1. Check if they are logged in
+    if (!ctx.request.userId) {
+      throw new Error("You must be logged into to create an item!");
+    }
 
     const where = { id: args.id };
     // 1. Find the item
