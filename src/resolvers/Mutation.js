@@ -10,7 +10,17 @@ const Mutation = {
       throw new Error("You must be logged into to create an item!");
     }
 
-    const item = await ctx.db.mutation.createItem({ data: { ...args } }, info);
+    const item = await ctx.db.mutation.createItem(
+      {
+        data: {
+          // create relationship to user
+          user: { connect: { id: ctx.request.userId } },
+          // rest of data
+          ...args
+        }
+      },
+      info
+    );
 
     return item;
   },
