@@ -60,6 +60,13 @@ const Mutation = {
 
     // Finally return
     return user;
+  },
+
+  signOut: async function(parent, args, ctx, info) {
+    // remove token cookie
+    ctx.response.clearCookie("token");
+
+    return { message: "Goodbye!" };
   }
 };
 
