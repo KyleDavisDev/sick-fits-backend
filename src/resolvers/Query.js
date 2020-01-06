@@ -4,6 +4,7 @@ const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 
 const { transport, makeANiceEmail } = require("../mail.js");
+const { hasPermission } = require("../utils");
 
 const Query = {
   items: async function(parent, args, ctx, info) {
@@ -101,8 +102,13 @@ const Query = {
 
   users: async function(parent, args, ctx, info) {
     // 1. Check if logged in
-    // 2. Check for permissions
-    // 3. Return users
+    if (!ctx.request.userId || !ctx.request.user) {
+      throw new Error("You must be logged in for this action!");
+    }
+    // 3. Check for permissions
+    hasPermission(ctx.request.user, ["ADMIN", "PERMISSIONUPDATE"]);
+    // 4. Return users
+    return ctx.db.query.users({}, info);
   }
 };
 
