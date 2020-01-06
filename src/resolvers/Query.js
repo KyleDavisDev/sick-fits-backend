@@ -97,6 +97,12 @@ const Query = {
 
     // 4. Return message
     return { message: "Thanks" };
+  },
+
+  users: async function(parent, args, ctx, info) {
+    // 1. Check if logged in
+    // 2. Check for permissions
+    // 3. Return users
   }
 };
 
