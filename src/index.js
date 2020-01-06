@@ -23,6 +23,22 @@ server.express.use((req, res, next) => {
   next();
 });
 
+// Find user who is requesting
+server.express.use(async (req, res, next) => {
+  // Keep going if not logged in
+  if (!req.userId) return next();
+
+  // find user
+  const user = await db.query.user(
+    { where: { id: req.userId } },
+    "{id, permissions, email, name}"
+  );
+
+  // attach user to request
+  req.user = user;
+  next();
+});
+
 server.start(
   {
     cors: {
