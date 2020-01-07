@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
+const { hasPermission } = require("../utils");
 
 const Mutation = {
   createItem: async function(parent, args, ctx, info) {
@@ -57,6 +58,7 @@ const Mutation = {
     // 3. Delete it
     return await ctx.db.mutation.deleteItem({ where }, info);
   },
+
   createNewUser: async function(parent, args, ctx, info) {
     // First.Last@email.com ==> first.last@email.com
     args.email = args.email.toLowerCase();
@@ -128,6 +130,25 @@ const Mutation = {
 
     // 8. Return new user
     return updatedUser;
+  },
+
+  updatePermissions: async function(parent, args, ctx, info) {
+    // 1. Check if user is logged in
+    if (!ctx.request.userId) {
+      throw new Error("You must be logged in to update a user!");
+    }
+
+    // 2. Check permission
+    hasPermission(ctx.request.user, ["ADMIN", "PERMISSIONUPDATE"]);
+
+    // 4. Update
+    return ctx.db.mutation.updateUser(
+      {
+        where: { id: args.userId },
+        data: { permissions: { set: args.permissions } }
+      },
+      info
+    );
   }
 };
 
