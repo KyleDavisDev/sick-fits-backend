@@ -44,6 +44,7 @@ const Mutation = {
       info
     );
   },
+
   deleteItem: async function(parent, args, ctx, info) {
     // 1. Check if they are logged in
     if (!ctx.request.userId) {
@@ -52,8 +53,17 @@ const Mutation = {
 
     const where = { id: args.id };
     // 1. Find the item
-    const item = await ctx.db.query.item({ where }, `{ id title}`);
+    const item = await ctx.db.query.item({ where }, `{ id title user {id}}`);
+
     // 2. Check permissions
+    const ownsItem = item.user.id === ctx.request.userId;
+    const hasPermissions = ctx.request.user.permissions.some(permis => {
+      return ["ADMIN", "ITEMDELETE"].includes(permis);
+    });
+
+    if (!ownsItem && !hasPermission) {
+      throw new Error("You do not have permissions to do that!");
+    }
 
     // 3. Delete it
     return await ctx.db.mutation.deleteItem({ where }, info);
