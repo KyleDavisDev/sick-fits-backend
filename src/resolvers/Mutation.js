@@ -159,6 +159,85 @@ const Mutation = {
       },
       info
     );
+  },
+
+  addToCart: async function(parent, args, ctx, info) {
+    // 1. Make sure signed in
+    if (!ctx.request.userId) {
+      throw new Error("You must be logged in to update a user!");
+    }
+
+    // 2. query the current cart
+    const [cart] = await ctx.db.query.carts(
+      {
+        where: { user: { id: ctx.request.userId } }
+        // orderBy: id_DESC
+      },
+      "{ id items { id quantity item { id }}}"
+    );
+
+    // if no carts found, create cart and include first item
+    if (!cart) {
+      const newCartItem = await ctx.db.mutation.createCartItem({
+        data: {
+          quantity: 1,
+          item: {
+            connect: { id: args.id }
+          }
+        }
+      });
+
+      return ctx.db.mutation.createCart(
+        {
+          data: {
+            user: { connect: { id: ctx.request.userId } },
+            items: { connect: { id: newCartItem.id } }
+          }
+        },
+        info
+      );
+    }
+
+    // 3. Check if item already exists in cart
+    let doesItemExistInCart = false;
+    let cartItem;
+    for (let i = 0, len = cart.items.length; i < len; i++) {
+      // look for a match
+      if (cart.items[i].item.id === args.id) {
+        doesItemExistInCart = true;
+        cartItem = cart.items[i];
+        break;
+      }
+    }
+
+    // 4. Incriment count
+    if (doesItemExistInCart) {
+      await ctx.db.mutation.updateCartItem({
+        data: { quantity: cartItem.quantity + 1 },
+        where: { id: cartItem.id }
+      });
+
+      return ctx.db.query.cart({ where: { id: cart.id } }, info);
+    }
+
+    // 5. or add item to cart
+    const newCartItem = await ctx.db.mutation.createCartItem({
+      data: {
+        quantity: 1,
+        item: {
+          connect: { id: args.id }
+        }
+      }
+    });
+    return ctx.db.mutation.updateCart(
+      {
+        data: {
+          items: { connect: { id: newCartItem.id } }
+        },
+        where: { id: cart.id }
+      },
+      info
+    );
   }
 };
 
