@@ -1,5 +1,13 @@
 module.exports = {
-        typeDefs: /* GraphQL */ `type AggregateItem {
+        typeDefs: /* GraphQL */ `type AggregateCart {
+  count: Int!
+}
+
+type AggregateCartItem {
+  count: Int!
+}
+
+type AggregateItem {
   count: Int!
 }
 
@@ -9,6 +17,216 @@ type AggregateUser {
 
 type BatchPayload {
   count: Long!
+}
+
+type Cart {
+  id: ID!
+  items(where: CartItemWhereInput, orderBy: CartItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CartItem!]
+  user: User!
+}
+
+type CartConnection {
+  pageInfo: PageInfo!
+  edges: [CartEdge]!
+  aggregate: AggregateCart!
+}
+
+input CartCreateInput {
+  items: CartItemCreateManyInput
+  user: UserCreateOneInput!
+}
+
+type CartEdge {
+  node: Cart!
+  cursor: String!
+}
+
+type CartItem {
+  id: ID!
+  quantity: Int!
+  item: Item!
+}
+
+type CartItemConnection {
+  pageInfo: PageInfo!
+  edges: [CartItemEdge]!
+  aggregate: AggregateCartItem!
+}
+
+input CartItemCreateInput {
+  quantity: Int
+  item: ItemCreateOneInput!
+}
+
+input CartItemCreateManyInput {
+  create: [CartItemCreateInput!]
+  connect: [CartItemWhereUniqueInput!]
+}
+
+type CartItemEdge {
+  node: CartItem!
+  cursor: String!
+}
+
+enum CartItemOrderByInput {
+  id_ASC
+  id_DESC
+  quantity_ASC
+  quantity_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type CartItemPreviousValues {
+  id: ID!
+  quantity: Int!
+}
+
+type CartItemSubscriptionPayload {
+  mutation: MutationType!
+  node: CartItem
+  updatedFields: [String!]
+  previousValues: CartItemPreviousValues
+}
+
+input CartItemSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: CartItemWhereInput
+  AND: [CartItemSubscriptionWhereInput!]
+  OR: [CartItemSubscriptionWhereInput!]
+  NOT: [CartItemSubscriptionWhereInput!]
+}
+
+input CartItemUpdateDataInput {
+  quantity: Int
+  item: ItemUpdateOneRequiredInput
+}
+
+input CartItemUpdateInput {
+  quantity: Int
+  item: ItemUpdateOneRequiredInput
+}
+
+input CartItemUpdateManyInput {
+  create: [CartItemCreateInput!]
+  delete: [CartItemWhereUniqueInput!]
+  connect: [CartItemWhereUniqueInput!]
+  disconnect: [CartItemWhereUniqueInput!]
+  update: [CartItemUpdateWithWhereUniqueNestedInput!]
+  upsert: [CartItemUpsertWithWhereUniqueNestedInput!]
+}
+
+input CartItemUpdateWithWhereUniqueNestedInput {
+  where: CartItemWhereUniqueInput!
+  data: CartItemUpdateDataInput!
+}
+
+input CartItemUpsertWithWhereUniqueNestedInput {
+  where: CartItemWhereUniqueInput!
+  update: CartItemUpdateDataInput!
+  create: CartItemCreateInput!
+}
+
+input CartItemWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  quantity: Int
+  quantity_not: Int
+  quantity_in: [Int!]
+  quantity_not_in: [Int!]
+  quantity_lt: Int
+  quantity_lte: Int
+  quantity_gt: Int
+  quantity_gte: Int
+  item: ItemWhereInput
+  AND: [CartItemWhereInput!]
+  OR: [CartItemWhereInput!]
+  NOT: [CartItemWhereInput!]
+}
+
+input CartItemWhereUniqueInput {
+  id: ID
+}
+
+enum CartOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type CartPreviousValues {
+  id: ID!
+}
+
+type CartSubscriptionPayload {
+  mutation: MutationType!
+  node: Cart
+  updatedFields: [String!]
+  previousValues: CartPreviousValues
+}
+
+input CartSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: CartWhereInput
+  AND: [CartSubscriptionWhereInput!]
+  OR: [CartSubscriptionWhereInput!]
+  NOT: [CartSubscriptionWhereInput!]
+}
+
+input CartUpdateInput {
+  items: CartItemUpdateManyInput
+  user: UserUpdateOneRequiredInput
+}
+
+input CartWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  items_every: CartItemWhereInput
+  items_some: CartItemWhereInput
+  items_none: CartItemWhereInput
+  user: UserWhereInput
+  AND: [CartWhereInput!]
+  OR: [CartWhereInput!]
+  NOT: [CartWhereInput!]
+}
+
+input CartWhereUniqueInput {
+  id: ID
 }
 
 scalar DateTime
@@ -38,6 +256,11 @@ input ItemCreateInput {
   largeImage: String
   price: Int!
   user: UserCreateOneInput!
+}
+
+input ItemCreateOneInput {
+  create: ItemCreateInput
+  connect: ItemWhereUniqueInput
 }
 
 type ItemEdge {
@@ -93,6 +316,15 @@ input ItemSubscriptionWhereInput {
   NOT: [ItemSubscriptionWhereInput!]
 }
 
+input ItemUpdateDataInput {
+  title: String
+  description: String
+  image: String
+  largeImage: String
+  price: Int
+  user: UserUpdateOneRequiredInput
+}
+
 input ItemUpdateInput {
   title: String
   description: String
@@ -100,6 +332,18 @@ input ItemUpdateInput {
   largeImage: String
   price: Int
   user: UserUpdateOneRequiredInput
+}
+
+input ItemUpdateOneRequiredInput {
+  create: ItemCreateInput
+  update: ItemUpdateDataInput
+  upsert: ItemUpsertNestedInput
+  connect: ItemWhereUniqueInput
+}
+
+input ItemUpsertNestedInput {
+  update: ItemUpdateDataInput!
+  create: ItemCreateInput!
 }
 
 input ItemWhereInput {
@@ -210,6 +454,18 @@ input ItemWhereUniqueInput {
 scalar Long
 
 type Mutation {
+  createCart(data: CartCreateInput!): Cart!
+  updateCart(data: CartUpdateInput!, where: CartWhereUniqueInput!): Cart
+  updateManyCarts(data: CartUpdateInput!, where: CartWhereInput): BatchPayload!
+  upsertCart(where: CartWhereUniqueInput!, create: CartCreateInput!, update: CartUpdateInput!): Cart!
+  deleteCart(where: CartWhereUniqueInput!): Cart
+  deleteManyCarts(where: CartWhereInput): BatchPayload!
+  createCartItem(data: CartItemCreateInput!): CartItem!
+  updateCartItem(data: CartItemUpdateInput!, where: CartItemWhereUniqueInput!): CartItem
+  updateManyCartItems(data: CartItemUpdateInput!, where: CartItemWhereInput): BatchPayload!
+  upsertCartItem(where: CartItemWhereUniqueInput!, create: CartItemCreateInput!, update: CartItemUpdateInput!): CartItem!
+  deleteCartItem(where: CartItemWhereUniqueInput!): CartItem
+  deleteManyCartItems(where: CartItemWhereInput): BatchPayload!
   createItem(data: ItemCreateInput!): Item!
   updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item
   updateManyItems(data: ItemUpdateInput!, where: ItemWhereInput): BatchPayload!
@@ -251,6 +507,12 @@ enum Permission {
 }
 
 type Query {
+  cart(where: CartWhereUniqueInput!): Cart
+  carts(where: CartWhereInput, orderBy: CartOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Cart]!
+  cartsConnection(where: CartWhereInput, orderBy: CartOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CartConnection!
+  cartItem(where: CartItemWhereUniqueInput!): CartItem
+  cartItems(where: CartItemWhereInput, orderBy: CartItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CartItem]!
+  cartItemsConnection(where: CartItemWhereInput, orderBy: CartItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CartItemConnection!
   item(where: ItemWhereUniqueInput!): Item
   items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Item]!
   itemsConnection(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ItemConnection!
@@ -261,6 +523,8 @@ type Query {
 }
 
 type Subscription {
+  cart(where: CartSubscriptionWhereInput): CartSubscriptionPayload
+  cartItem(where: CartItemSubscriptionWhereInput): CartItemSubscriptionPayload
   item(where: ItemSubscriptionWhereInput): ItemSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }

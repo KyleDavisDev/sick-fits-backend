@@ -11,6 +11,8 @@ type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
   U[keyof U];
 
 export interface Exists {
+  cart: (where?: CartWhereInput) => Promise<boolean>;
+  cartItem: (where?: CartItemWhereInput) => Promise<boolean>;
   item: (where?: ItemWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
@@ -33,6 +35,44 @@ export interface Prisma {
    * Queries
    */
 
+  cart: (where: CartWhereUniqueInput) => Cart;
+  carts: (args?: {
+    where?: CartWhereInput;
+    orderBy?: CartOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => Promise<Array<CartNode>>;
+  cartsConnection: (args?: {
+    where?: CartWhereInput;
+    orderBy?: CartOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => CartConnection;
+  cartItem: (where: CartItemWhereUniqueInput) => CartItem;
+  cartItems: (args?: {
+    where?: CartItemWhereInput;
+    orderBy?: CartItemOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => Promise<Array<CartItemNode>>;
+  cartItemsConnection: (args?: {
+    where?: CartItemWhereInput;
+    orderBy?: CartItemOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => CartItemConnection;
   item: (where: ItemWhereUniqueInput) => Item;
   items: (args?: {
     where?: ItemWhereInput;
@@ -77,6 +117,38 @@ export interface Prisma {
    * Mutations
    */
 
+  createCart: (data: CartCreateInput) => Cart;
+  updateCart: (args: {
+    data: CartUpdateInput;
+    where: CartWhereUniqueInput;
+  }) => Cart;
+  updateManyCarts: (args: {
+    data: CartUpdateInput;
+    where?: CartWhereInput;
+  }) => BatchPayload;
+  upsertCart: (args: {
+    where: CartWhereUniqueInput;
+    create: CartCreateInput;
+    update: CartUpdateInput;
+  }) => Cart;
+  deleteCart: (where: CartWhereUniqueInput) => Cart;
+  deleteManyCarts: (where?: CartWhereInput) => BatchPayload;
+  createCartItem: (data: CartItemCreateInput) => CartItem;
+  updateCartItem: (args: {
+    data: CartItemUpdateInput;
+    where: CartItemWhereUniqueInput;
+  }) => CartItem;
+  updateManyCartItems: (args: {
+    data: CartItemUpdateInput;
+    where?: CartItemWhereInput;
+  }) => BatchPayload;
+  upsertCartItem: (args: {
+    where: CartItemWhereUniqueInput;
+    create: CartItemCreateInput;
+    update: CartItemUpdateInput;
+  }) => CartItem;
+  deleteCartItem: (where: CartItemWhereUniqueInput) => CartItem;
+  deleteManyCartItems: (where?: CartItemWhereInput) => BatchPayload;
   createItem: (data: ItemCreateInput) => Item;
   updateItem: (args: {
     data: ItemUpdateInput;
@@ -118,6 +190,12 @@ export interface Prisma {
 }
 
 export interface Subscription {
+  cart: (
+    where?: CartSubscriptionWhereInput
+  ) => CartSubscriptionPayloadSubscription;
+  cartItem: (
+    where?: CartItemSubscriptionWhereInput
+  ) => CartItemSubscriptionPayloadSubscription;
   item: (
     where?: ItemSubscriptionWhereInput
   ) => ItemSubscriptionPayloadSubscription;
@@ -134,6 +212,16 @@ export interface ClientConstructor<T> {
  * Types
  */
 
+export type CartItemOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "quantity_ASC"
+  | "quantity_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
 export type Permission =
   | "ADMIN"
   | "USER"
@@ -141,6 +229,14 @@ export type Permission =
   | "ITEMUPDATE"
   | "ITEMDELETE"
   | "PERMISSIONUPDATE";
+
+export type CartOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type ItemOrderByInput =
   | "id_ASC"
@@ -180,9 +276,38 @@ export type UserOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export type ItemWhereUniqueInput = AtLeastOne<{
+export type CartWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
+
+export interface CartItemWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  quantity?: Int;
+  quantity_not?: Int;
+  quantity_in?: Int[] | Int;
+  quantity_not_in?: Int[] | Int;
+  quantity_lt?: Int;
+  quantity_lte?: Int;
+  quantity_gt?: Int;
+  quantity_gte?: Int;
+  item?: ItemWhereInput;
+  AND?: CartItemWhereInput[] | CartItemWhereInput;
+  OR?: CartItemWhereInput[] | CartItemWhereInput;
+  NOT?: CartItemWhereInput[] | CartItemWhereInput;
+}
 
 export interface ItemWhereInput {
   id?: ID_Input;
@@ -369,10 +494,62 @@ export interface UserWhereInput {
   NOT?: UserWhereInput[] | UserWhereInput;
 }
 
+export interface CartWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  items_every?: CartItemWhereInput;
+  items_some?: CartItemWhereInput;
+  items_none?: CartItemWhereInput;
+  user?: UserWhereInput;
+  AND?: CartWhereInput[] | CartWhereInput;
+  OR?: CartWhereInput[] | CartWhereInput;
+  NOT?: CartWhereInput[] | CartWhereInput;
+}
+
+export type CartItemWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
+
+export type ItemWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
+
 export type UserWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
   email?: String;
 }>;
+
+export interface CartCreateInput {
+  items?: CartItemCreateManyInput;
+  user: UserCreateOneInput;
+}
+
+export interface CartItemCreateManyInput {
+  create?: CartItemCreateInput[] | CartItemCreateInput;
+  connect?: CartItemWhereUniqueInput[] | CartItemWhereUniqueInput;
+}
+
+export interface CartItemCreateInput {
+  quantity?: Int;
+  item: ItemCreateOneInput;
+}
+
+export interface ItemCreateOneInput {
+  create?: ItemCreateInput;
+  connect?: ItemWhereUniqueInput;
+}
 
 export interface ItemCreateInput {
   title: String;
@@ -401,7 +578,42 @@ export interface UserCreatepermissionsInput {
   set?: Permission[] | Permission;
 }
 
-export interface ItemUpdateInput {
+export interface CartUpdateInput {
+  items?: CartItemUpdateManyInput;
+  user?: UserUpdateOneRequiredInput;
+}
+
+export interface CartItemUpdateManyInput {
+  create?: CartItemCreateInput[] | CartItemCreateInput;
+  delete?: CartItemWhereUniqueInput[] | CartItemWhereUniqueInput;
+  connect?: CartItemWhereUniqueInput[] | CartItemWhereUniqueInput;
+  disconnect?: CartItemWhereUniqueInput[] | CartItemWhereUniqueInput;
+  update?:
+    | CartItemUpdateWithWhereUniqueNestedInput[]
+    | CartItemUpdateWithWhereUniqueNestedInput;
+  upsert?:
+    | CartItemUpsertWithWhereUniqueNestedInput[]
+    | CartItemUpsertWithWhereUniqueNestedInput;
+}
+
+export interface CartItemUpdateWithWhereUniqueNestedInput {
+  where: CartItemWhereUniqueInput;
+  data: CartItemUpdateDataInput;
+}
+
+export interface CartItemUpdateDataInput {
+  quantity?: Int;
+  item?: ItemUpdateOneRequiredInput;
+}
+
+export interface ItemUpdateOneRequiredInput {
+  create?: ItemCreateInput;
+  update?: ItemUpdateDataInput;
+  upsert?: ItemUpsertNestedInput;
+  connect?: ItemWhereUniqueInput;
+}
+
+export interface ItemUpdateDataInput {
   title?: String;
   description?: String;
   image?: String;
@@ -435,6 +647,31 @@ export interface UserUpsertNestedInput {
   create: UserCreateInput;
 }
 
+export interface ItemUpsertNestedInput {
+  update: ItemUpdateDataInput;
+  create: ItemCreateInput;
+}
+
+export interface CartItemUpsertWithWhereUniqueNestedInput {
+  where: CartItemWhereUniqueInput;
+  update: CartItemUpdateDataInput;
+  create: CartItemCreateInput;
+}
+
+export interface CartItemUpdateInput {
+  quantity?: Int;
+  item?: ItemUpdateOneRequiredInput;
+}
+
+export interface ItemUpdateInput {
+  title?: String;
+  description?: String;
+  image?: String;
+  largeImage?: String;
+  price?: Int;
+  user?: UserUpdateOneRequiredInput;
+}
+
 export interface UserUpdateInput {
   name?: String;
   email?: String;
@@ -442,6 +679,28 @@ export interface UserUpdateInput {
   resetToken?: String;
   resetTokenExpire?: Float;
   permissions?: UserUpdatepermissionsInput;
+}
+
+export interface CartSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: CartWhereInput;
+  AND?: CartSubscriptionWhereInput[] | CartSubscriptionWhereInput;
+  OR?: CartSubscriptionWhereInput[] | CartSubscriptionWhereInput;
+  NOT?: CartSubscriptionWhereInput[] | CartSubscriptionWhereInput;
+}
+
+export interface CartItemSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: CartItemWhereInput;
+  AND?: CartItemSubscriptionWhereInput[] | CartItemSubscriptionWhereInput;
+  OR?: CartItemSubscriptionWhereInput[] | CartItemSubscriptionWhereInput;
+  NOT?: CartItemSubscriptionWhereInput[] | CartItemSubscriptionWhereInput;
 }
 
 export interface ItemSubscriptionWhereInput {
@@ -468,6 +727,59 @@ export interface UserSubscriptionWhereInput {
 
 export interface NodeNode {
   id: ID_Output;
+}
+
+export interface CartNode {
+  id: ID_Output;
+}
+
+export interface Cart extends Promise<CartNode>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  items: <T = Promise<Array<CartItemNode>>>(args?: {
+    where?: CartItemWhereInput;
+    orderBy?: CartItemOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  user: <T = User>() => T;
+}
+
+export interface CartSubscription
+  extends Promise<AsyncIterator<CartNode>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  items: <T = Promise<AsyncIterator<Array<CartItemSubscription>>>>(args?: {
+    where?: CartItemWhereInput;
+    orderBy?: CartItemOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  user: <T = UserSubscription>() => T;
+}
+
+export interface CartItemNode {
+  id: ID_Output;
+  quantity: Int;
+}
+
+export interface CartItem extends Promise<CartItemNode>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  quantity: () => Promise<Int>;
+  item: <T = Item>() => T;
+}
+
+export interface CartItemSubscription
+  extends Promise<AsyncIterator<CartItemNode>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  quantity: () => Promise<AsyncIterator<Int>>;
+  item: <T = ItemSubscription>() => T;
 }
 
 export interface ItemNode {
@@ -539,22 +851,22 @@ export interface UserSubscription
   permissions: () => Promise<AsyncIterator<Permission[]>>;
 }
 
-export interface ItemConnectionNode {}
+export interface CartConnectionNode {}
 
-export interface ItemConnection
-  extends Promise<ItemConnectionNode>,
+export interface CartConnection
+  extends Promise<CartConnectionNode>,
     Fragmentable {
   pageInfo: <T = PageInfo>() => T;
-  edges: <T = Promise<Array<ItemEdgeNode>>>() => T;
-  aggregate: <T = AggregateItem>() => T;
+  edges: <T = Promise<Array<CartEdgeNode>>>() => T;
+  aggregate: <T = AggregateCart>() => T;
 }
 
-export interface ItemConnectionSubscription
-  extends Promise<AsyncIterator<ItemConnectionNode>>,
+export interface CartConnectionSubscription
+  extends Promise<AsyncIterator<CartConnectionNode>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<Array<ItemEdgeSubscription>>>>() => T;
-  aggregate: <T = AggregateItemSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<Array<CartEdgeSubscription>>>>() => T;
+  aggregate: <T = AggregateCartSubscription>() => T;
 }
 
 export interface PageInfoNode {
@@ -578,6 +890,106 @@ export interface PageInfoSubscription
   hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
   startCursor: () => Promise<AsyncIterator<String>>;
   endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface CartEdgeNode {
+  cursor: String;
+}
+
+export interface CartEdge extends Promise<CartEdgeNode>, Fragmentable {
+  node: <T = Cart>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface CartEdgeSubscription
+  extends Promise<AsyncIterator<CartEdgeNode>>,
+    Fragmentable {
+  node: <T = CartSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateCartNode {
+  count: Int;
+}
+
+export interface AggregateCart
+  extends Promise<AggregateCartNode>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateCartSubscription
+  extends Promise<AsyncIterator<AggregateCartNode>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface CartItemConnectionNode {}
+
+export interface CartItemConnection
+  extends Promise<CartItemConnectionNode>,
+    Fragmentable {
+  pageInfo: <T = PageInfo>() => T;
+  edges: <T = Promise<Array<CartItemEdgeNode>>>() => T;
+  aggregate: <T = AggregateCartItem>() => T;
+}
+
+export interface CartItemConnectionSubscription
+  extends Promise<AsyncIterator<CartItemConnectionNode>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<Array<CartItemEdgeSubscription>>>>() => T;
+  aggregate: <T = AggregateCartItemSubscription>() => T;
+}
+
+export interface CartItemEdgeNode {
+  cursor: String;
+}
+
+export interface CartItemEdge extends Promise<CartItemEdgeNode>, Fragmentable {
+  node: <T = CartItem>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface CartItemEdgeSubscription
+  extends Promise<AsyncIterator<CartItemEdgeNode>>,
+    Fragmentable {
+  node: <T = CartItemSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateCartItemNode {
+  count: Int;
+}
+
+export interface AggregateCartItem
+  extends Promise<AggregateCartItemNode>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateCartItemSubscription
+  extends Promise<AsyncIterator<AggregateCartItemNode>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface ItemConnectionNode {}
+
+export interface ItemConnection
+  extends Promise<ItemConnectionNode>,
+    Fragmentable {
+  pageInfo: <T = PageInfo>() => T;
+  edges: <T = Promise<Array<ItemEdgeNode>>>() => T;
+  aggregate: <T = AggregateItem>() => T;
+}
+
+export interface ItemConnectionSubscription
+  extends Promise<AsyncIterator<ItemConnectionNode>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<Array<ItemEdgeSubscription>>>>() => T;
+  aggregate: <T = AggregateItemSubscription>() => T;
 }
 
 export interface ItemEdgeNode {
@@ -674,6 +1086,87 @@ export interface BatchPayloadSubscription
   extends Promise<AsyncIterator<BatchPayloadNode>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface CartSubscriptionPayloadNode {
+  mutation: MutationType;
+  updatedFields?: String[];
+}
+
+export interface CartSubscriptionPayload
+  extends Promise<CartSubscriptionPayloadNode>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = Cart>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = CartPreviousValues>() => T;
+}
+
+export interface CartSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<CartSubscriptionPayloadNode>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = CartSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = CartPreviousValuesSubscription>() => T;
+}
+
+export interface CartPreviousValuesNode {
+  id: ID_Output;
+}
+
+export interface CartPreviousValues
+  extends Promise<CartPreviousValuesNode>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+}
+
+export interface CartPreviousValuesSubscription
+  extends Promise<AsyncIterator<CartPreviousValuesNode>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+}
+
+export interface CartItemSubscriptionPayloadNode {
+  mutation: MutationType;
+  updatedFields?: String[];
+}
+
+export interface CartItemSubscriptionPayload
+  extends Promise<CartItemSubscriptionPayloadNode>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = CartItem>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = CartItemPreviousValues>() => T;
+}
+
+export interface CartItemSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<CartItemSubscriptionPayloadNode>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = CartItemSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = CartItemPreviousValuesSubscription>() => T;
+}
+
+export interface CartItemPreviousValuesNode {
+  id: ID_Output;
+  quantity: Int;
+}
+
+export interface CartItemPreviousValues
+  extends Promise<CartItemPreviousValuesNode>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  quantity: () => Promise<Int>;
+}
+
+export interface CartItemPreviousValuesSubscription
+  extends Promise<AsyncIterator<CartItemPreviousValuesNode>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  quantity: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface ItemSubscriptionPayloadNode {
@@ -800,14 +1293,14 @@ export type ID_Input = string | number;
 export type ID_Output = string;
 
 /*
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-*/
-export type String = string;
-
-/*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
 export type Int = number;
+
+/*
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+*/
+export type String = string;
 
 /*
 DateTime scalar input type, allowing Date
