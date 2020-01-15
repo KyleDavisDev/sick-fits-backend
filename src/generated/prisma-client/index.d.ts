@@ -513,6 +513,22 @@ export interface CartWhereInput {
   items_some?: CartItemWhereInput;
   items_none?: CartItemWhereInput;
   user?: UserWhereInput;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
   AND?: CartWhereInput[] | CartWhereInput;
   OR?: CartWhereInput[] | CartWhereInput;
   NOT?: CartWhereInput[] | CartWhereInput;
@@ -731,6 +747,8 @@ export interface NodeNode {
 
 export interface CartNode {
   id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface Cart extends Promise<CartNode>, Fragmentable {
@@ -745,6 +763,8 @@ export interface Cart extends Promise<CartNode>, Fragmentable {
     last?: Int;
   }) => T;
   user: <T = User>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface CartSubscription
@@ -761,6 +781,8 @@ export interface CartSubscription
     last?: Int;
   }) => T;
   user: <T = UserSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface CartItemNode {
@@ -1113,18 +1135,24 @@ export interface CartSubscriptionPayloadSubscription
 
 export interface CartPreviousValuesNode {
   id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface CartPreviousValues
   extends Promise<CartPreviousValuesNode>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface CartPreviousValuesSubscription
   extends Promise<AsyncIterator<CartPreviousValuesNode>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface CartItemSubscriptionPayloadNode {
