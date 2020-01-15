@@ -513,22 +513,22 @@ export interface CartWhereInput {
   items_some?: CartItemWhereInput;
   items_none?: CartItemWhereInput;
   user?: UserWhereInput;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
+  createdAt?: Int;
+  createdAt_not?: Int;
+  createdAt_in?: Int[] | Int;
+  createdAt_not_in?: Int[] | Int;
+  createdAt_lt?: Int;
+  createdAt_lte?: Int;
+  createdAt_gt?: Int;
+  createdAt_gte?: Int;
+  updatedAt?: Int;
+  updatedAt_not?: Int;
+  updatedAt_in?: Int[] | Int;
+  updatedAt_not_in?: Int[] | Int;
+  updatedAt_lt?: Int;
+  updatedAt_lte?: Int;
+  updatedAt_gt?: Int;
+  updatedAt_gte?: Int;
   AND?: CartWhereInput[] | CartWhereInput;
   OR?: CartWhereInput[] | CartWhereInput;
   NOT?: CartWhereInput[] | CartWhereInput;
@@ -747,8 +747,8 @@ export interface NodeNode {
 
 export interface CartNode {
   id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
+  createdAt: Int;
+  updatedAt: Int;
 }
 
 export interface Cart extends Promise<CartNode>, Fragmentable {
@@ -763,8 +763,8 @@ export interface Cart extends Promise<CartNode>, Fragmentable {
     last?: Int;
   }) => T;
   user: <T = User>() => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
+  createdAt: () => Promise<Int>;
+  updatedAt: () => Promise<Int>;
 }
 
 export interface CartSubscription
@@ -781,8 +781,8 @@ export interface CartSubscription
     last?: Int;
   }) => T;
   user: <T = UserSubscription>() => T;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  createdAt: () => Promise<AsyncIterator<Int>>;
+  updatedAt: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface CartItemNode {
@@ -1135,24 +1135,24 @@ export interface CartSubscriptionPayloadSubscription
 
 export interface CartPreviousValuesNode {
   id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
+  createdAt: Int;
+  updatedAt: Int;
 }
 
 export interface CartPreviousValues
   extends Promise<CartPreviousValuesNode>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
+  createdAt: () => Promise<Int>;
+  updatedAt: () => Promise<Int>;
 }
 
 export interface CartPreviousValuesSubscription
   extends Promise<AsyncIterator<CartPreviousValuesNode>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  createdAt: () => Promise<AsyncIterator<Int>>;
+  updatedAt: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface CartItemSubscriptionPayloadNode {
