@@ -39,6 +39,6 @@ type Cart {
   id: ID! @id @unique
   items: [CartItem]!
   user: User!
-  created: Int!
-  updated: Int!
+  created: Float!
+  updated: Float!
 }
