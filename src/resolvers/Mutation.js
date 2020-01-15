@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 const { hasPermission } = require("../utils");
+const moment = require("moment");
 
 const Mutation = {
   createItem: async function(parent, args, ctx, info) {
@@ -168,16 +169,23 @@ const Mutation = {
     }
 
     // 2. query the current cart
+    const cartDateRange = moment().unix() - 60 * 60 * 24; // one day less than current time
     const [cart] = await ctx.db.query.carts(
       {
-        where: { user: { id: ctx.request.userId } }
-        // orderBy: id_DESC
+        where: {
+          user: { id: ctx.request.userId }
+          // AND: [{ updated_gte: cartDateRange }]
+        },
+        orderBy: "updated_DESC"
       },
-      "{ id items { id quantity item { id }}}"
+      "{ created id items { id quantity item { id }}}"
     );
+
+    console.log(cart);
 
     // if no carts found, create cart and include first item
     if (!cart) {
+      const curTime = moment().unix();
       const newCartItem = await ctx.db.mutation.createCartItem({
         data: {
           quantity: 1,
@@ -191,7 +199,9 @@ const Mutation = {
         {
           data: {
             user: { connect: { id: ctx.request.userId } },
-            items: { connect: { id: newCartItem.id } }
+            items: { connect: { id: newCartItem.id } },
+            created: curTime,
+            updated: curTime
           }
         },
         info
@@ -215,6 +225,12 @@ const Mutation = {
       await ctx.db.mutation.updateCartItem({
         data: { quantity: cartItem.quantity + 1 },
         where: { id: cartItem.id }
+      });
+
+      const curTime = moment().unix();
+      await ctx.db.mutation.updateCart({
+        data: { updated: curTime },
+        where: { id: cart.id }
       });
 
       return ctx.db.query.cart({ where: { id: cart.id } }, info);
