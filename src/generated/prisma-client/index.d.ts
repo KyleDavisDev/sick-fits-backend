@@ -517,22 +517,22 @@ export interface CartWhereInput {
   items_some?: CartItemWhereInput;
   items_none?: CartItemWhereInput;
   user?: UserWhereInput;
-  created?: Int;
-  created_not?: Int;
-  created_in?: Int[] | Int;
-  created_not_in?: Int[] | Int;
-  created_lt?: Int;
-  created_lte?: Int;
-  created_gt?: Int;
-  created_gte?: Int;
-  updated?: Int;
-  updated_not?: Int;
-  updated_in?: Int[] | Int;
-  updated_not_in?: Int[] | Int;
-  updated_lt?: Int;
-  updated_lte?: Int;
-  updated_gt?: Int;
-  updated_gte?: Int;
+  created?: Float;
+  created_not?: Float;
+  created_in?: Float[] | Float;
+  created_not_in?: Float[] | Float;
+  created_lt?: Float;
+  created_lte?: Float;
+  created_gt?: Float;
+  created_gte?: Float;
+  updated?: Float;
+  updated_not?: Float;
+  updated_in?: Float[] | Float;
+  updated_not_in?: Float[] | Float;
+  updated_lt?: Float;
+  updated_lte?: Float;
+  updated_gt?: Float;
+  updated_gte?: Float;
   AND?: CartWhereInput[] | CartWhereInput;
   OR?: CartWhereInput[] | CartWhereInput;
   NOT?: CartWhereInput[] | CartWhereInput;
@@ -554,8 +554,8 @@ export type UserWhereUniqueInput = AtLeastOne<{
 export interface CartCreateInput {
   items?: CartItemCreateManyInput;
   user: UserCreateOneInput;
-  created: Int;
-  updated: Int;
+  created: Float;
+  updated: Float;
 }
 
 export interface CartItemCreateManyInput {
@@ -603,8 +603,8 @@ export interface UserCreatepermissionsInput {
 export interface CartUpdateInput {
   items?: CartItemUpdateManyInput;
   user?: UserUpdateOneRequiredInput;
-  created?: Int;
-  updated?: Int;
+  created?: Float;
+  updated?: Float;
 }
 
 export interface CartItemUpdateManyInput {
@@ -755,8 +755,8 @@ export interface NodeNode {
 
 export interface CartNode {
   id: ID_Output;
-  created: Int;
-  updated: Int;
+  created: Float;
+  updated: Float;
 }
 
 export interface Cart extends Promise<CartNode>, Fragmentable {
@@ -771,8 +771,8 @@ export interface Cart extends Promise<CartNode>, Fragmentable {
     last?: Int;
   }) => T;
   user: <T = User>() => T;
-  created: () => Promise<Int>;
-  updated: () => Promise<Int>;
+  created: () => Promise<Float>;
+  updated: () => Promise<Float>;
 }
 
 export interface CartSubscription
@@ -789,8 +789,8 @@ export interface CartSubscription
     last?: Int;
   }) => T;
   user: <T = UserSubscription>() => T;
-  created: () => Promise<AsyncIterator<Int>>;
-  updated: () => Promise<AsyncIterator<Int>>;
+  created: () => Promise<AsyncIterator<Float>>;
+  updated: () => Promise<AsyncIterator<Float>>;
 }
 
 export interface CartItemNode {
@@ -1143,24 +1143,24 @@ export interface CartSubscriptionPayloadSubscription
 
 export interface CartPreviousValuesNode {
   id: ID_Output;
-  created: Int;
-  updated: Int;
+  created: Float;
+  updated: Float;
 }
 
 export interface CartPreviousValues
   extends Promise<CartPreviousValuesNode>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  created: () => Promise<Int>;
-  updated: () => Promise<Int>;
+  created: () => Promise<Float>;
+  updated: () => Promise<Float>;
 }
 
 export interface CartPreviousValuesSubscription
   extends Promise<AsyncIterator<CartPreviousValuesNode>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  created: () => Promise<AsyncIterator<Int>>;
-  updated: () => Promise<AsyncIterator<Int>>;
+  created: () => Promise<AsyncIterator<Float>>;
+  updated: () => Promise<AsyncIterator<Float>>;
 }
 
 export interface CartItemSubscriptionPayloadNode {
