@@ -233,6 +233,10 @@ export type Permission =
 export type CartOrderByInput =
   | "id_ASC"
   | "id_DESC"
+  | "created_ASC"
+  | "created_DESC"
+  | "updated_ASC"
+  | "updated_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -513,22 +517,22 @@ export interface CartWhereInput {
   items_some?: CartItemWhereInput;
   items_none?: CartItemWhereInput;
   user?: UserWhereInput;
-  createdAt?: Int;
-  createdAt_not?: Int;
-  createdAt_in?: Int[] | Int;
-  createdAt_not_in?: Int[] | Int;
-  createdAt_lt?: Int;
-  createdAt_lte?: Int;
-  createdAt_gt?: Int;
-  createdAt_gte?: Int;
-  updatedAt?: Int;
-  updatedAt_not?: Int;
-  updatedAt_in?: Int[] | Int;
-  updatedAt_not_in?: Int[] | Int;
-  updatedAt_lt?: Int;
-  updatedAt_lte?: Int;
-  updatedAt_gt?: Int;
-  updatedAt_gte?: Int;
+  created?: Int;
+  created_not?: Int;
+  created_in?: Int[] | Int;
+  created_not_in?: Int[] | Int;
+  created_lt?: Int;
+  created_lte?: Int;
+  created_gt?: Int;
+  created_gte?: Int;
+  updated?: Int;
+  updated_not?: Int;
+  updated_in?: Int[] | Int;
+  updated_not_in?: Int[] | Int;
+  updated_lt?: Int;
+  updated_lte?: Int;
+  updated_gt?: Int;
+  updated_gte?: Int;
   AND?: CartWhereInput[] | CartWhereInput;
   OR?: CartWhereInput[] | CartWhereInput;
   NOT?: CartWhereInput[] | CartWhereInput;
@@ -550,6 +554,8 @@ export type UserWhereUniqueInput = AtLeastOne<{
 export interface CartCreateInput {
   items?: CartItemCreateManyInput;
   user: UserCreateOneInput;
+  created: Int;
+  updated: Int;
 }
 
 export interface CartItemCreateManyInput {
@@ -597,6 +603,8 @@ export interface UserCreatepermissionsInput {
 export interface CartUpdateInput {
   items?: CartItemUpdateManyInput;
   user?: UserUpdateOneRequiredInput;
+  created?: Int;
+  updated?: Int;
 }
 
 export interface CartItemUpdateManyInput {
@@ -747,8 +755,8 @@ export interface NodeNode {
 
 export interface CartNode {
   id: ID_Output;
-  createdAt: Int;
-  updatedAt: Int;
+  created: Int;
+  updated: Int;
 }
 
 export interface Cart extends Promise<CartNode>, Fragmentable {
@@ -763,8 +771,8 @@ export interface Cart extends Promise<CartNode>, Fragmentable {
     last?: Int;
   }) => T;
   user: <T = User>() => T;
-  createdAt: () => Promise<Int>;
-  updatedAt: () => Promise<Int>;
+  created: () => Promise<Int>;
+  updated: () => Promise<Int>;
 }
 
 export interface CartSubscription
@@ -781,8 +789,8 @@ export interface CartSubscription
     last?: Int;
   }) => T;
   user: <T = UserSubscription>() => T;
-  createdAt: () => Promise<AsyncIterator<Int>>;
-  updatedAt: () => Promise<AsyncIterator<Int>>;
+  created: () => Promise<AsyncIterator<Int>>;
+  updated: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface CartItemNode {
@@ -1135,24 +1143,24 @@ export interface CartSubscriptionPayloadSubscription
 
 export interface CartPreviousValuesNode {
   id: ID_Output;
-  createdAt: Int;
-  updatedAt: Int;
+  created: Int;
+  updated: Int;
 }
 
 export interface CartPreviousValues
   extends Promise<CartPreviousValuesNode>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  createdAt: () => Promise<Int>;
-  updatedAt: () => Promise<Int>;
+  created: () => Promise<Int>;
+  updated: () => Promise<Int>;
 }
 
 export interface CartPreviousValuesSubscription
   extends Promise<AsyncIterator<CartPreviousValuesNode>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<Int>>;
-  updatedAt: () => Promise<AsyncIterator<Int>>;
+  created: () => Promise<AsyncIterator<Int>>;
+  updated: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface CartItemSubscriptionPayloadNode {

@@ -22,8 +22,8 @@ type Cart {
   id: ID!
   items(where: CartItemWhereInput, orderBy: CartItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CartItem!]
   user: User!
-  createdAt: Int!
-  updatedAt: Int!
+  created: Int!
+  updated: Int!
 }
 
 type CartConnection {
@@ -35,6 +35,8 @@ type CartConnection {
 input CartCreateInput {
   items: CartItemCreateManyInput
   user: UserCreateOneInput!
+  created: Int!
+  updated: Int!
 }
 
 type CartEdge {
@@ -169,6 +171,10 @@ input CartItemWhereUniqueInput {
 enum CartOrderByInput {
   id_ASC
   id_DESC
+  created_ASC
+  created_DESC
+  updated_ASC
+  updated_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -177,8 +183,8 @@ enum CartOrderByInput {
 
 type CartPreviousValues {
   id: ID!
-  createdAt: Int!
-  updatedAt: Int!
+  created: Int!
+  updated: Int!
 }
 
 type CartSubscriptionPayload {
@@ -202,6 +208,8 @@ input CartSubscriptionWhereInput {
 input CartUpdateInput {
   items: CartItemUpdateManyInput
   user: UserUpdateOneRequiredInput
+  created: Int
+  updated: Int
 }
 
 input CartWhereInput {
@@ -223,22 +231,22 @@ input CartWhereInput {
   items_some: CartItemWhereInput
   items_none: CartItemWhereInput
   user: UserWhereInput
-  createdAt: Int
-  createdAt_not: Int
-  createdAt_in: [Int!]
-  createdAt_not_in: [Int!]
-  createdAt_lt: Int
-  createdAt_lte: Int
-  createdAt_gt: Int
-  createdAt_gte: Int
-  updatedAt: Int
-  updatedAt_not: Int
-  updatedAt_in: [Int!]
-  updatedAt_not_in: [Int!]
-  updatedAt_lt: Int
-  updatedAt_lte: Int
-  updatedAt_gt: Int
-  updatedAt_gte: Int
+  created: Int
+  created_not: Int
+  created_in: [Int!]
+  created_not_in: [Int!]
+  created_lt: Int
+  created_lte: Int
+  created_gt: Int
+  created_gte: Int
+  updated: Int
+  updated_not: Int
+  updated_in: [Int!]
+  updated_not_in: [Int!]
+  updated_lt: Int
+  updated_lte: Int
+  updated_gt: Int
+  updated_gte: Int
   AND: [CartWhereInput!]
   OR: [CartWhereInput!]
   NOT: [CartWhereInput!]
