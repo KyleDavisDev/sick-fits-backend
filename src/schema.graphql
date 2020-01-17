@@ -30,7 +30,7 @@ type Query {
   ): [Item]!
   item(where: ItemWhereInput!): Item
   itemsConnection(where: ItemWhereInput): ItemConnection!
-  me: User
+  me: Me
   signIn(email: String!, password: String!): User
   requestReset(email: String!): SuccessMessage
   users: [User]!
@@ -45,4 +45,12 @@ type User {
   name: String!
   email: String!
   permissions: [Permission!]!
+}
+
+type Me {
+  id: ID!
+  name: String!
+  email: String!
+  permissions: [Permission!]!
+  cart: Cart
 }
