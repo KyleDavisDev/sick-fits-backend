@@ -167,25 +167,24 @@ const Mutation = {
     if (!ctx.request.userId) {
       throw new Error("You must be logged in to update a user!");
     }
+    // get the unix time
+    const curTime = moment().unix();
 
     // 2. query the current cart
-    const cartDateRange = moment().unix() - 60 * 60 * 24; // one day less than current time
     const [cart] = await ctx.db.query.carts(
       {
         where: {
-          user: { id: ctx.request.userId }
-          // AND: [{ updated_gte: cartDateRange }]
+          user: { id: ctx.request.userId },
+          // one day less than current time
+          AND: [{ updated_gte: curTime - 60 * 60 * 24 }]
         },
         orderBy: "updated_DESC"
       },
       "{ created id items { id quantity item { id }}}"
     );
 
-    console.log(cart);
-
     // if no carts found, create cart and include first item
     if (!cart) {
-      const curTime = moment().unix();
       const newCartItem = await ctx.db.mutation.createCartItem({
         data: {
           quantity: 1,
@@ -227,7 +226,6 @@ const Mutation = {
         where: { id: cartItem.id }
       });
 
-      const curTime = moment().unix();
       await ctx.db.mutation.updateCart({
         data: { updated: curTime },
         where: { id: cart.id }
@@ -248,7 +246,8 @@ const Mutation = {
     return ctx.db.mutation.updateCart(
       {
         data: {
-          items: { connect: { id: newCartItem.id } }
+          items: { connect: { id: newCartItem.id } },
+          updated: curTime
         },
         where: { id: cart.id }
       },
