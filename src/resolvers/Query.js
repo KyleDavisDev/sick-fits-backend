@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
+const moment = require("moment");
 
 const { transport, makeANiceEmail } = require("../mail.js");
 const { hasPermission } = require("../utils");
@@ -38,7 +39,29 @@ const Query = {
     }
 
     // find user
-    return ctx.db.query.user({ where: { id: ctx.request.userId } }, info);
+    const user = await ctx.db.query.user(
+      { where: { id: ctx.request.userId } },
+      info
+    );
+
+    const oneDayAgo = moment().unix() - 60 * 60 * 24;
+    const [cart] = await ctx.db.query.carts(
+      {
+        where: {
+          user: { id: ctx.request.userId },
+          // one day less than current time
+          AND: [{ updated_gte: oneDayAgo }]
+        },
+        orderBy: "updated_DESC"
+      },
+      "{ created id items { id quantity item { id price image title description }}}"
+    );
+
+    // combine user and cart
+    const results = { ...user, cart };
+
+    // return to client
+    return results;
   },
 
   signIn: async function(parent, args, ctx, info) {
