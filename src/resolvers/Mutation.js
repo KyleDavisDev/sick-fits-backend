@@ -253,6 +253,48 @@ const Mutation = {
       },
       info
     );
+  },
+
+  removeFromCart: async function(parent, args, ctx, info) {
+    // 1. Make sure signed in
+    if (!ctx.request.userId) {
+      throw new Error("You must be logged in to update a user!");
+    }
+    // get the unix time
+    const curTime = moment().unix();
+
+    // 2. query the current cart
+    const [cart] = await ctx.db.query.carts(
+      {
+        where: {
+          user: { id: ctx.request.userId },
+          // one day less than current time
+          AND: [{ updated_gte: curTime - 60 * 60 * 24 }]
+        },
+        orderBy: "updated_DESC"
+      },
+      "{ created id items { id quantity item { id }}}"
+    );
+
+    if (!cart) {
+      throw new Error("No cart found");
+    }
+
+    // get the cartitem
+    const cartItem = cart.items.find(item => item.id === args.id);
+
+    if (!cartItem) {
+      throw new Error("Could not find this item on your cart");
+    }
+
+    const updatedCart = await ctx.db.mutation.deleteCartItem(
+      {
+        where: { id: args.id }
+      },
+      info
+    );
+
+    return updatedCart;
   }
 };
 
