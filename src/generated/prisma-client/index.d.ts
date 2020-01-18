@@ -565,7 +565,7 @@ export interface CartItemCreateManyInput {
 
 export interface CartItemCreateInput {
   quantity?: Int;
-  item: ItemCreateOneInput;
+  item?: ItemCreateOneInput;
 }
 
 export interface ItemCreateOneInput {
@@ -627,13 +627,15 @@ export interface CartItemUpdateWithWhereUniqueNestedInput {
 
 export interface CartItemUpdateDataInput {
   quantity?: Int;
-  item?: ItemUpdateOneRequiredInput;
+  item?: ItemUpdateOneInput;
 }
 
-export interface ItemUpdateOneRequiredInput {
+export interface ItemUpdateOneInput {
   create?: ItemCreateInput;
   update?: ItemUpdateDataInput;
   upsert?: ItemUpsertNestedInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
   connect?: ItemWhereUniqueInput;
 }
 
@@ -684,7 +686,7 @@ export interface CartItemUpsertWithWhereUniqueNestedInput {
 
 export interface CartItemUpdateInput {
   quantity?: Int;
-  item?: ItemUpdateOneRequiredInput;
+  item?: ItemUpdateOneInput;
 }
 
 export interface ItemUpdateInput {
