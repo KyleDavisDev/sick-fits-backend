@@ -212,7 +212,7 @@ const Mutation = {
     let cartItem;
     for (let i = 0, len = cart.items.length; i < len; i++) {
       // look for a match
-      if (cart.items[i].item.id === args.id) {
+      if (cart.items[i].id === args.id) {
         doesItemExistInCart = true;
         cartItem = cart.items[i];
         break;
