@@ -211,7 +211,7 @@ const Mutation = {
     let cartItem;
     for (let i = 0, len = cart.items.length; i < len; i++) {
       // look for a match
-      if (cart.items[i].id === args.id) {
+      if (cart.items[i].item.id === args.id) {
         doesItemExistInCart = true;
         cartItem = cart.items[i];
         break;
@@ -298,7 +298,7 @@ const Mutation = {
 
   createOrder: async (parent, args, ctx, info) => {
     // 1. Query current user, make sure user signed in
-    const { userId } = ctx.request.userId;
+    const { userId } = ctx.request;
     if (!userId) {
       throw new Error("You must be logged in to update a user!");
     }
@@ -313,17 +313,21 @@ const Mutation = {
         where: { user: { id: userId }, AND: [{ isActive: true }] },
         orderBy: "updated_DESC"
       },
-      "{id items { id quantity item {title price id description image} } }"
+      "{ id items { id quantity item {title price id description image} } }"
     );
     if (!cart) {
       throw new Error("Could not find your cart! Please try again.");
     }
+    console.log(cart);
 
     // get the unix time
     const curTime = moment().unix();
 
     // 3. Recalculte total for the price
-
+    const amount = cart.items.reduce((acc, cartItem) => {
+      return acc + cartItem.quantity * cartItem.item.price;
+    }, 0);
+    console.log(`Going to charge for a total of: ${amount}`);
     // 4. Create the stripe charge
 
     // 5. Convert cartitems to orderitem
