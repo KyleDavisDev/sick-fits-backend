@@ -551,6 +551,7 @@ type Order {
   id: ID!
   items(where: OrderItemWhereInput, orderBy: OrderItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrderItem!]
   user: User
+  total: Int!
   created: Int!
   updated: Int!
   charge: String!
@@ -565,6 +566,7 @@ type OrderConnection {
 input OrderCreateInput {
   items: OrderItemCreateManyInput
   user: UserCreateOneInput
+  total: Int!
   created: Int!
   updated: Int!
   charge: String!
@@ -801,6 +803,8 @@ input OrderItemWhereUniqueInput {
 enum OrderOrderByInput {
   id_ASC
   id_DESC
+  total_ASC
+  total_DESC
   created_ASC
   created_DESC
   updated_ASC
@@ -815,6 +819,7 @@ enum OrderOrderByInput {
 
 type OrderPreviousValues {
   id: ID!
+  total: Int!
   created: Int!
   updated: Int!
   charge: String!
@@ -841,6 +846,7 @@ input OrderSubscriptionWhereInput {
 input OrderUpdateInput {
   items: OrderItemUpdateManyInput
   user: UserUpdateOneInput
+  total: Int
   created: Int
   updated: Int
   charge: String
@@ -865,6 +871,14 @@ input OrderWhereInput {
   items_some: OrderItemWhereInput
   items_none: OrderItemWhereInput
   user: UserWhereInput
+  total: Int
+  total_not: Int
+  total_in: [Int!]
+  total_not_in: [Int!]
+  total_lt: Int
+  total_lte: Int
+  total_gt: Int
+  total_gte: Int
   created: Int
   created_not: Int
   created_in: [Int!]
