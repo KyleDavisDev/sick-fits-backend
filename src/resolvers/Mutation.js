@@ -294,7 +294,24 @@ const Mutation = {
     );
 
     return updatedCart;
+  },
+
+  createOrder: async (parent, args, ctx, info) {
+    // 1. Query current user and make sure signed in
+
+    // 2. Recalculte total for the price
+
+    // 3. Create the stripe charge
+
+    // 4. Convert cartitems to orderitem
+
+    // 5. create the order
+
+    // 6. clean up user cart - switch isActive to false
+
+    // 7. Return the order to the client
   }
+
 };
 
 module.exports = Mutation;
