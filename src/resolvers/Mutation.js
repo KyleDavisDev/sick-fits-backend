@@ -2,8 +2,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
-const { hasPermission } = require("../utils");
 const moment = require("moment");
+const stripe = require("../stripe");
+const { hasPermission } = require("../utils");
 
 const Mutation = {
   createItem: async function(parent, args, ctx, info) {
@@ -310,33 +311,67 @@ const Mutation = {
     // 2. Get user's active cart
     const [cart] = await ctx.db.query.carts(
       {
-        where: { user: { id: userId }, AND: [{ isActive: true }] },
+        where: { user: { id: user.id }, AND: [{ isActive: true }] },
         orderBy: "updated_DESC"
       },
-      "{ id items { id quantity item {title price id description image} } }"
+      "{ id items { id quantity item {title price id description image largeImage} } }"
     );
     if (!cart) {
       throw new Error("Could not find your cart! Please try again.");
     }
-    console.log(cart);
-
-    // get the unix time
-    const curTime = moment().unix();
 
     // 3. Recalculte total for the price
     const amount = cart.items.reduce((acc, cartItem) => {
       return acc + cartItem.quantity * cartItem.item.price;
     }, 0);
     console.log(`Going to charge for a total of: ${amount}`);
-    // 4. Create the stripe charge
+
+    // 4. Create the stripe charge (turn toke in $$$)
+    const charge = await stripe.charges.create({
+      amount,
+      currency: "USD",
+      source: args.token
+    });
 
     // 5. Convert cartitems to orderitem
+    const orderItems = cart.items.map(cartItem => {
+      // get item
+      const item = cartItem.item;
+      // remove id
+      delete item.id;
+
+      // create orderitem from cartItem and item
+      const orderItem = {
+        ...item,
+        quantity: cartItem.quantity,
+        user: { connect: { id: user.id } }
+      };
+
+      return orderItem;
+    });
 
     // 6. create the order
+    // get the unix time
+    const curTime = moment().unix();
+    const order = await ctx.db.mutation.createOrder({
+      data: {
+        user: { connect: { id: user.id } },
+        items: { create: orderItems },
+        created: curTime,
+        updated: curTime,
+        total: charge.amount,
+        charge: charge.id
+      }
+    });
 
     // 7. clean up user cart - switch isActive to false
+    await ctx.db.mutation.updateCart({
+      data: { isActive: false },
+      where: { id: cart.id }
+    });
 
     // 8. Return the order to the client
+    return order;
   }
 };
 
