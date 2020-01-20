@@ -130,6 +130,13 @@ const Query = {
     hasPermission(ctx.request.user, ["ADMIN", "PERMISSIONUPDATE"]);
     // 4. Return users
     return ctx.db.query.users({}, info);
+  },
+
+  order: async function(parent, args, ctx, info) {
+    // 1. Make sure they are logged in
+    // 2. Query the requested order
+    // 3. check user permission
+    // 4. return order
   }
 };
 
