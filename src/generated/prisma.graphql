@@ -32,6 +32,7 @@ type Cart {
   user: User!
   created: Int!
   updated: Int!
+  isActive: Boolean!
 }
 
 type CartConnection {
@@ -45,6 +46,7 @@ input CartCreateInput {
   user: UserCreateOneInput!
   created: Int!
   updated: Int!
+  isActive: Boolean
 }
 
 type CartEdge {
@@ -183,6 +185,8 @@ enum CartOrderByInput {
   created_DESC
   updated_ASC
   updated_DESC
+  isActive_ASC
+  isActive_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -193,6 +197,7 @@ type CartPreviousValues {
   id: ID!
   created: Int!
   updated: Int!
+  isActive: Boolean!
 }
 
 type CartSubscriptionPayload {
@@ -218,6 +223,7 @@ input CartUpdateInput {
   user: UserUpdateOneRequiredInput
   created: Int
   updated: Int
+  isActive: Boolean
 }
 
 input CartWhereInput {
@@ -255,6 +261,8 @@ input CartWhereInput {
   updated_lte: Int
   updated_gt: Int
   updated_gte: Int
+  isActive: Boolean
+  isActive_not: Boolean
   AND: [CartWhereInput!]
   OR: [CartWhereInput!]
   NOT: [CartWhereInput!]

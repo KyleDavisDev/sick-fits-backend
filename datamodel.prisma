@@ -41,6 +41,7 @@ type Cart {
   user: User!
   created: Int!
   updated: Int!
+  isActive: Boolean! @default(value: true)
 }
 
 type OrderItem {
