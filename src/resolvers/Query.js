@@ -155,6 +155,11 @@ const Query = {
 
     // 4. return order
     return order;
+  },
+
+  orders: async function(parent, args, ctx, info) {
+    // 1. Make sure user logged in
+    // 2. Return orders for that user
   }
 };
 
