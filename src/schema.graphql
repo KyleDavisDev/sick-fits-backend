@@ -36,7 +36,7 @@ type Query {
   signIn(email: String!, password: String!): User
   requestReset(email: String!): SuccessMessage
   users: [User]!
-  order(id: ID!) Order
+  order(id: ID!): Order
 }
 
 type SuccessMessage {
