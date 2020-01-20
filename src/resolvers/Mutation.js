@@ -257,7 +257,7 @@ const Mutation = {
   removeFromCart: async function(parent, args, ctx, info) {
     // 1. Make sure signed in
     if (!ctx.request.userId) {
-      throw new Error("You must be logged in to update a user!");
+      throw new Error("You must be logged in to remove item from cart!");
     }
     // get the unix time
     const curTime = moment().unix();
@@ -296,22 +296,44 @@ const Mutation = {
     return updatedCart;
   },
 
-  createOrder: async (parent, args, ctx, info) {
-    // 1. Query current user and make sure signed in
+  createOrder: async (parent, args, ctx, info) => {
+    // 1. Query current user, make sure user signed in
+    const { userId } = ctx.request.userId;
+    if (!userId) {
+      throw new Error("You must be logged in to update a user!");
+    }
+    const user = await ctx.db.query.user(
+      { where: { id: userId } },
+      "{ id name email }"
+    );
 
-    // 2. Recalculte total for the price
+    // 2. Get user's active cart
+    const [cart] = await ctx.db.query.carts(
+      {
+        where: { user: { id: userId }, AND: [{ isActive: true }] },
+        orderBy: "updated_DESC"
+      },
+      "{id items { id quantity item {title price id description image} } }"
+    );
+    if (!cart) {
+      throw new Error("Could not find your cart! Please try again.");
+    }
 
-    // 3. Create the stripe charge
+    // get the unix time
+    const curTime = moment().unix();
 
-    // 4. Convert cartitems to orderitem
+    // 3. Recalculte total for the price
 
-    // 5. create the order
+    // 4. Create the stripe charge
 
-    // 6. clean up user cart - switch isActive to false
+    // 5. Convert cartitems to orderitem
 
-    // 7. Return the order to the client
+    // 6. create the order
+
+    // 7. clean up user cart - switch isActive to false
+
+    // 8. Return the order to the client
   }
-
 };
 
 module.exports = Mutation;
