@@ -42,3 +42,24 @@ type Cart {
   created: Int!
   updated: Int!
 }
+
+type OrderItem {
+  id: ID! @id @unique
+  title: String!
+  description: String!
+  image: String
+  largeImage: String
+  price: Int!
+  quantity: Int! @default(value: 1)
+  user: User! 
+}
+
+type Order {
+  id: ID! @id @unique
+  items: [OrderItem]!
+  user: User
+  created: Int!
+  updated: Int!
+  charge: String!
+
+}
