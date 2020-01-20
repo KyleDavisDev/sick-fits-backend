@@ -159,7 +159,15 @@ const Query = {
 
   orders: async function(parent, args, ctx, info) {
     // 1. Make sure user logged in
+    if (!ctx.request.userId || !ctx.request.user) {
+      throw new Error("You must be logged in to see your orders!");
+    }
+
     // 2. Return orders for that user
+    return ctx.db.query.orders(
+      { where: { user: { id: ctx.request.userId } } },
+      info
+    );
   }
 };
 
