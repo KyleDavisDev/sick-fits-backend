@@ -134,9 +134,27 @@ const Query = {
 
   order: async function(parent, args, ctx, info) {
     // 1. Make sure they are logged in
+    if (!ctx.request.userId || !ctx.request.user) {
+      throw new Error("You must be logged in to see your orders!");
+    }
+
     // 2. Query the requested order
+    const order = await ctx.db.query.order({ where: { id: args.id } }, info);
+    if (!order) {
+      return null;
+    }
+
     // 3. check user permission
+    const ownsOrder = order.user.id === ctx.request.userId;
+    const hasPermissionsToSeeOrder = ctx.request.user.permissions.includes(
+      "ADMIN"
+    );
+    if (!ownsOrder || !hasPermissionsToSeeOrder) {
+      throw new Error("You are not allowed to see this order, bud!");
+    }
+
     // 4. return order
+    return order;
   }
 };
 
