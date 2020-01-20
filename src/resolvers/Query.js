@@ -44,13 +44,11 @@ const Query = {
       info
     );
 
-    const oneDayAgo = moment().unix() - 60 * 60 * 24;
     const [cart] = await ctx.db.query.carts(
       {
         where: {
           user: { id: ctx.request.userId },
-          // one day less than current time
-          AND: [{ updated_gte: oneDayAgo }]
+          AND: [{ isActive: true }]
         },
         orderBy: "updated_DESC"
       },

@@ -170,13 +170,12 @@ const Mutation = {
     // get the unix time
     const curTime = moment().unix();
 
-    // 2. query the current cart
+    // 2. query the active cart
     const [cart] = await ctx.db.query.carts(
       {
         where: {
           user: { id: ctx.request.userId },
-          // one day less than current time
-          AND: [{ updated_gte: curTime - 60 * 60 * 24 }]
+          AND: [{ isActive: true }]
         },
         orderBy: "updated_DESC"
       },
