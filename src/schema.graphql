@@ -37,7 +37,7 @@ type Query {
   requestReset(email: String!): SuccessMessage
   users: [User]!
   order(id: ID!): Order
-  orders: [Order]
+  orders(orderBy: OrderOrderByInput): [Order]
 }
 
 type SuccessMessage {
